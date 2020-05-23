@@ -1,3 +1,5 @@
+import 'package:coffee_order_app/shared/constant.dart';
+import 'package:coffee_order_app/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_order_app/services/auth.dart';
 
@@ -15,6 +17,7 @@ class _SignUpState extends State<SignUp> {
 
   final AuthService _auth = AuthService(); // Create an instance of AuthService Class
   final _formKey = GlobalKey<FormState>(); // Identify and Assosiate with the form
+  bool loading = false;
 
   // Text field state
   String email = '';
@@ -23,7 +26,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
        backgroundColor: Colors.brown[100],
        appBar: AppBar(
          backgroundColor: Colors.brown[400],
@@ -47,6 +50,7 @@ class _SignUpState extends State<SignUp> {
              children: <Widget>[
                SizedBox(height: 20.0),
                TextFormField(
+                 decoration: textInputDecoration.copyWith(hintText: 'Email'),
                  validator: (val) => val.isEmpty ? 'Enter an e-mail' : null,
                  onChanged: (val){
                    setState(() {
@@ -56,6 +60,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                SizedBox(height: 20.0),
                TextFormField(
+                 decoration: textInputDecoration.copyWith(hintText: 'Password'),
                  obscureText: true,
                  validator: (val) => val.length < 6 ? 'Enter a pssword 6+ characters long' : null,
                  onChanged: (val){
@@ -73,10 +78,14 @@ class _SignUpState extends State<SignUp> {
                   ),
                   onPressed: () async{
                     if (_formKey.currentState.validate()) {
+                      setState(() {
+                        loading = true;
+                      });
                       dynamic result = await _auth.signUpWithEmailAndPassword(email, password);
                       if (result == null) {
                         setState(() {
                           error = 'Please provide an valid email address';
+                          loading = false;
                         });
                       }
                     }

@@ -1,4 +1,6 @@
 import 'package:coffee_order_app/services/auth.dart';
+import 'package:coffee_order_app/shared/constant.dart';
+import 'package:coffee_order_app/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -15,6 +17,7 @@ class _SignInState extends State<SignIn> {
 
   final AuthService _auth = AuthService(); // Create an instance of AuthService Class
   final _formKey = GlobalKey<FormState>(); // Identify and Assosiate with the form
+  bool loading = false;
 
   // Text field state
   String email = '';
@@ -23,7 +26,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
        backgroundColor: Colors.brown[100],
        appBar: AppBar(
          backgroundColor: Colors.brown[400],
@@ -46,6 +49,7 @@ class _SignInState extends State<SignIn> {
              children: <Widget>[
                SizedBox(height: 20.0),
                TextFormField(
+                 decoration: textInputDecoration.copyWith(hintText: 'Email'),
                  validator: (val) => val.isEmpty ? 'Enter an e-mail' : null,
                  onChanged: (val){
                    setState(() {
@@ -55,6 +59,7 @@ class _SignInState extends State<SignIn> {
                 ),
                SizedBox(height: 20.0),
                TextFormField(
+                 decoration: textInputDecoration.copyWith(hintText: 'Password'),
                  validator: (val) => val.length < 6 ? 'Enter a pssword 6+ characters long' : null,
                  obscureText: true,
                  onChanged: (val){
@@ -72,11 +77,15 @@ class _SignInState extends State<SignIn> {
                   ),
                   onPressed: () async{
                     if (_formKey.currentState.validate()) {
+                      setState(() {
+                        loading = true;
+                      });
                       dynamic result = _auth.signInWithEmailAndPassword(email, password);
                       
                       if (result == null) {
                         setState(() {
                           error = "Couldn't sign in with this email & password.";
+                          loading = false;
                         });
                       }
                     }
