@@ -1,4 +1,5 @@
 import 'package:coffee_order_app/models/user.dart';
+import 'package:coffee_order_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -46,6 +47,10 @@ class AuthService {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
+
+       // Create a new document for the user with the uid
+      await DatabaseService(uid: user.uid).updateUserData('a new member', 'A4 Sheets Bundle', 2);
+
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
