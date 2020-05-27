@@ -1,3 +1,4 @@
+import 'package:coffee_order_app/screens/home/settings_form.dart';
 import 'package:coffee_order_app/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,16 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    void _showSettingsPanel(){
+      showModalBottomSheet(context: context, builder: (context) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+          child: SettingForm(),
+        );
+      });
+    }
+
     return StreamProvider<List<Item>>.value(
           value: DatabaseService().items,
           child: Scaffold(
@@ -28,6 +39,11 @@ class Home extends StatelessWidget {
               onPressed: () async{
                 await _auth.signOut();
               }
+            ),
+            FlatButton.icon(
+              onPressed: () => _showSettingsPanel(), 
+              icon: Icon(Icons.settings), 
+              label: Text('Settings')
             )
           ]
         ),
