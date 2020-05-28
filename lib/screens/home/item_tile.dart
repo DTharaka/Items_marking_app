@@ -15,7 +15,7 @@ class ItemTile extends StatelessWidget {
         child: ListTile(
           leading: CircleAvatar(
             radius: 25.0,
-            backgroundColor: Colors.black,
+            backgroundImage: AssetImage('assets/avatar.jpg'),
           ),
           title: Text(item.name),
           subtitle: Text('${item.name} wants ${item.quantity} pieces of ${item.item}'),

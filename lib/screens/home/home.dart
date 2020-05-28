@@ -47,7 +47,15 @@ class Home extends StatelessWidget {
             )
           ]
         ),
-        body: ItemList(),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/stationary.jpg'),
+              fit: BoxFit.cover
+            )
+          ),
+          child: ItemList()
+        ),
       ),
     );
   }
